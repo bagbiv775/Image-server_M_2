@@ -243,7 +243,7 @@ class ImageServerHandler(BaseHTTPRequestHandler):
                     os.remove(file_path)
                     logging.info(f"Файл {filename} успешно удален.")
 
-                # РЕДИРЕКТ: Возвращаем пользователя строго на ту же страницу и вкладку Images!
+                # РЕДИРЕКТ: Возвращаем пользователя строго на ту же страницу и вкладку Images
                 self.send_response(303)
                 self.send_header('Location', f'/list?page={back_page}&view=images')
                 self.end_headers()
@@ -326,74 +326,6 @@ class ImageServerHandler(BaseHTTPRequestHandler):
             if os.path.exists(file_path):
                 os.remove(file_path)
             return self.send_response_json(500, {"error": "Внутренняя ошибка сервера"})
-
-
-    # def do_POST(self):
-    #     if self.path != '/upload':
-    #         return self.send_response_json(404, {"error": "Страница не найдена"})
-    #
-    #     content_length = int(self.headers.get('Content-Length', 0))
-    #     if content_length > MAX_CONTENT_LENGTH:
-    #         return self.send_response_json(400, {"error": "Файл слишком большой"})
-    #
-    #     content_type = self.headers.get('Content-Type', '')
-    #     if not content_type.startswith('multipart/form-data'):
-    #         return self.send_response_json(400, {"error": "Ожидается multipart/form-data"})
-    #
-    #     boundary_match = re.search(r'boundary=([^;]+)', content_type)
-    #     if not boundary_match:
-    #         return self.send_response_json(400, {"error": "Некорректный запрос"})
-    #
-    #     boundary = boundary_match.group(1).encode('utf-8')
-    #     raw_body = self.rfile.read(content_length)
-    #     parts = raw_body.split(b'--' + boundary)
-    #
-    #     file_bytes = None
-    #     filename = None
-    #
-    #     for part in parts:
-    #         if b'Content-Disposition' in part and b'filename=' in part:
-    #             header_part, body_part = part.split(b'\r\n\r\n', 1)
-    #             filename_match = re.search(r'filename="([^"]+)"', header_part.decode('utf-8', errors='ignore'))
-    #             if filename_match:
-    #                 filename = filename_match.group(1)
-    #             if body_part.endswith(b'\r\n'):
-    #                 body_part = body_part[:-2]
-    #             file_bytes = body_part
-    #             break
-    #
-    #     if not file_bytes or not filename:
-    #         return self.send_response_json(400, {"error": "Файл не отправлен"})
-    #
-    #     _, ext = os.path.splitext(filename.lower())
-    #     if ext not in ALLOWED_EXTENSIONS:
-    #         return self.send_response_json(400, {"error": f"Неподдерживаемый формат"})
-    #
-    #     unique_filename = f"{uuid.uuid4().hex}{ext}"
-    #     file_path = os.path.join(UPLOAD_DIR, unique_filename)
-    #     file_size = len(file_bytes)
-    #
-    #     try:
-    #         with open(file_path, 'wb') as f:
-    #             f.write(file_bytes)
-    #
-    #         conn = get_db_connection()
-    #         cur = conn.cursor()
-    #         cur.execute(
-    #             "INSERT INTO images (filename, original_name, size, file_type) VALUES (%s, %s, %s, %s);",
-    #             (unique_filename, filename, file_size, ext.replace('.', ''))
-    #         )
-    #         conn.commit()
-    #         cur.close()
-    #         conn.close()
-    #
-    #         logging.info(f"Файл {unique_filename} сохранен.")
-    #         return self.send_response_json(201, {"url": f"/images/{unique_filename}"})
-    #     except Exception as e:
-    #         logging.error(f"Ошибка при сохранении: {str(e)}")
-    #         if os.path.exists(file_path):
-    #             os.remove(file_path)
-    #         return self.send_response_json(500, {"error": "Внутренняя ошибка сервера"})
 
 
 def run(server_class=HTTPServer, handler_class=ImageServerHandler, port=8000):

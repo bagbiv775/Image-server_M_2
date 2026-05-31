@@ -56,7 +56,7 @@
             display: block;
         }
 
-        /* Форма загрузки (Макет 777) */
+        /* Форма загрузки */
         .drop-zone {
             background: #fdfdff;
             border: 2px dashed #4370ff;
@@ -132,7 +132,7 @@
             border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer;
         }
 
-        /* Таблица файлов по ТЗ (Макет 888 + image_972c5e.png) */
+        /* Таблица файлов по ТЗ */
         .table-container {
             background: white;
             border-radius: 12px;
@@ -290,35 +290,6 @@
                 alert('Произошла сетевая ошибка или файл слишком велик для отправки');
             });
         }
-
-
-<!--        function submitForm() {-->
-<!--            const form = document.getElementById('upload-form');-->
-<!--            const formData = new FormData(form);-->
-
-<!--            // На время загрузки можно заблокировать зону (опционально)-->
-<!--            fetch('/upload', {-->
-<!--                method: 'POST',-->
-<!--                body: formData-->
-<!--            })-->
-<!--            // Сначала проверяем статус ответа (400, 500 и т.д.), но всё равно парсим JSON-->
-<!--            .then(response => response.json().then(data => ({ status: response.status, data })))-->
-<!--            .then(({ status, data }) => {-->
-<!--                if (status === 200 && data.url) {-->
-<!--                    document.getElementById('url-output').value = window.location.origin + data.url;-->
-<!--                    alert('Файл успешно загружен!');-->
-<!--                } else if (data.error) {-->
-<!--                    // Сюда прилетят наши сообщения: "Размер файла больше 5 МБ" или "Тип файла не соответствует..."-->
-<!--                    alert(data.error);-->
-<!--                } else {-->
-<!--                    alert('Произошла неизвестная ошибка при загрузке');-->
-<!--                }-->
-<!--            })-->
-<!--            .catch(error => {-->
-<!--                console.error('Error:', error);-->
-<!--                alert('Произошла сетевая ошибка при загрузке файла');-->
-<!--            });-->
-<!--        }-->
 
         function copyUrl() {
             const copyText = document.getElementById('url-output');
