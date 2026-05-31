@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_container
+    environment:
+      POSTGRES_DB: images_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups   # Папка для бэкапов на вашем компьютере
+    expose:
+      - "5432"
+    restart: always
+
+  backend:
+    build: ./backend
+    container_name: python_backend
+    environment:
+      - DB_HOST=db
+      - DB_NAME=images_db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    volumes:
+#      - images_data:/images
+      - ./logs:/logs
+      - ./backups:/backups
+      - ./images:/images # Python сохраняет файлы сюда
+    expose:
+      - "8000"
+    depends_on:
+      - db
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./images:/usr/share/nginx/html/images # Nginx забирает файлы ОТСЮДА
+#      - images_data:/images:ro
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  postgres_data:
