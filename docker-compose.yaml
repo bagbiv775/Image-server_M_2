@@ -14,7 +14,7 @@ services:
     restart: always
 
   backend:
-    build: ./backend
+    build: app
     container_name: python_backend
     environment:
       - DB_HOST=db
